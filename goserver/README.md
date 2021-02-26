@@ -13,6 +13,8 @@ It should implements next two API calls:
 (This creates users 0-99 in the mocked DB)
 
 # Sample commands-output
+Note: Assuming default port number 8080. If you changed that on server run please adjust curl sample commands.
+
 Retrieve a user:
 ```
 curl http://localhost:8080/user/90
