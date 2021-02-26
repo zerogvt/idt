@@ -8,7 +8,8 @@ import (
 
 // User models a user
 type User struct {
-	ID int `json:"id"`
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 // ToJSON serializes a user
@@ -30,8 +31,8 @@ func NewUserStore() *UserStore {
 
 }
 
-//Get retrieves a user from the store
-func (us *UserStore) Get(id int) (*User, error) {
+// Read retrieves a user from the store
+func (us *UserStore) Read(id int) (*User, error) {
 	var user *User
 	var found bool
 	if user, found = us.store[id]; !found {
@@ -40,15 +41,16 @@ func (us *UserStore) Get(id int) (*User, error) {
 	return user, nil
 }
 
-//Put puts a user into the the store
-func (us *UserStore) Put(id int) error {
+// Update puts a user into the the store
+func (us *UserStore) Update(id int, name string) error {
 	user := User{
-		ID: id,
-	}
-	_, exists := us.store[id]
-	if exists {
-		return errors.New("User id exists")
+		ID:   id,
+		Name: name,
 	}
 	us.store[id] = &user
+	usr, ok := us.store[id]
+	if !ok || *usr != user {
+		return errors.New("DB Error")
+	}
 	return nil
 }

@@ -23,8 +23,9 @@ func NewUserHandler(db *data.UserStore, l *log.Logger) *UserHandler {
 	}
 }
 
-// GetUser fetches a user from data store
-func (uh *UserHandler) GetUser(rw http.ResponseWriter, r *http.Request) {
+// Get fetches a user from data store and returns a JSON representation of her
+func (uh *UserHandler) Get(rw http.ResponseWriter, r *http.Request) {
+	rw.Header().Add("Content-Type", "application/json")
 	vars := mux.Vars(r)
 	var id int
 	var err error
@@ -33,29 +34,33 @@ func (uh *UserHandler) GetUser(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var u *data.User
-	if u, err = uh.db.Get(id); err != nil {
+	if u, err = uh.db.Read(id); err != nil {
 		http.Error(rw, "User not found", http.StatusNotFound)
 		return
 	}
-	// serialize the list to JSON
 	if err = u.ToJSON(rw); err != nil {
 		http.Error(rw, "Error while serializing user", http.StatusInternalServerError)
-		return
 	}
 }
 
-// PutUser puts a user to data store if her id is not already there
-// in case of conflict returns an error
-func (uh *UserHandler) PutUser(rw http.ResponseWriter, r *http.Request) {
+// Put updates or creates a user in data store.
+func (uh *UserHandler) Put(rw http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var id int
+	var name string
 	var err error
 	if id, err = strconv.Atoi(vars["id"]); err != nil {
-		http.Error(rw, "Bad parameter", http.StatusBadRequest)
+		http.Error(rw, "Bad id parameter", http.StatusBadRequest)
 		return
 	}
-	if err = uh.db.Put(id); err != nil {
-		http.Error(rw, err.Error(), http.StatusConflict)
+	var ok bool
+	if name, ok = vars["name"]; !ok {
+		http.Error(rw, "Bad name parameter", http.StatusBadRequest)
+		return
+	}
+	if err = uh.db.Update(id, name); err != nil {
+		http.Error(rw, err.Error(), http.StatusInternalServerError)
+		return
 	}
 	rw.WriteHeader(http.StatusCreated)
 }

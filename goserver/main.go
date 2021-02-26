@@ -22,17 +22,15 @@ func main() {
 	udb := data.NewUserStore()
 	data.FillWithMockUsers(udb)
 	uh := handlers.NewUserHandler(udb, l)
-	muxr := mux.NewRouter()
-	getr := muxr.Methods(http.MethodGet).Subrouter()
-	getr.HandleFunc("/user/{id}", uh.GetUser)
-
-	putr := muxr.Methods(http.MethodPut).Subrouter()
-	putr.HandleFunc("/user/{id}", uh.GetUser)
+	rtr := mux.NewRouter()
+	usrRouter := rtr.PathPrefix("/user").Subrouter()
+	usrRouter.Path("/{id}").Methods(http.MethodGet).HandlerFunc(uh.Get)
+	usrRouter.Path("/{id}").Queries("name", "{name}").Methods(http.MethodPut).HandlerFunc(uh.Put)
 
 	// create a new server
 	srv := http.Server{
+		Handler:      rtr,
 		Addr:         bindaddr,          // configure the bind address
-		Handler:      getr,              // set the default handler
 		ErrorLog:     l,                 // set the logger for the server
 		ReadTimeout:  5 * time.Second,   // max time to read request from the client
 		WriteTimeout: 10 * time.Second,  // max time to write response to the client
