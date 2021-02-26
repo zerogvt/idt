@@ -13,7 +13,6 @@ It should implements next two API calls:
 (This creates users 0-99 in the mocked DB)
 
 # Sample commands-output
-```
 Retrieve a user:
 ```
 curl http://localhost:8080/user/90
