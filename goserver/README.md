@@ -30,3 +30,6 @@ curl -X PUT http://localhost:8080/user/101?name=vasilis
 curl http://localhost:8080/user/101
 > {"id":101,"name":"vasilis"}
 ```
+
+# TODO
+* unit tests
