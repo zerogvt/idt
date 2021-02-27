@@ -1,5 +1,5 @@
 import unittest
-from pymoticon import emotistrip
+from pymoticon import emotistrip, init_emo_db
 
 
 class TestDeploy(unittest.TestCase):
@@ -12,3 +12,7 @@ class TestDeploy(unittest.TestCase):
         want = ["Hello", ":)"]
         have = emotistrip(inp, db)
         self.assertEqual(want, have)
+
+    def test_init_emo_db(self):
+        db = init_emo_db()
+        self.assertTrue(':)' in db)
