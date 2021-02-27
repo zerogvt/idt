@@ -9,6 +9,9 @@ python 3.8.0 or later
 ```
 pymoticon$ chmod +x pymoticon.py
 
+pymoticon$ ./pymoticon.py "Hello world! How (sp?) are you today (;"
+['Hello', 'world', 'How', 'sp', 'are', 'you', 'today', '(;']
+
 pymoticon$ ./pymoticon.py "don't like this sth is fishy (O--<"
 ["don't", 'like', 'this', 'sth', 'is', 'fishy', '(O--<']
 
