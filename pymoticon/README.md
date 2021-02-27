@@ -5,6 +5,14 @@ Given the input string: "Hello world! How (sp?) are you today (;" split it into 
 # Preconditions
 python 3.8.0 or later
 
+# run tests
+```
+virtualenv --python $(which python3) .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+pytest
+```
+
 # Example runs
 ```
 pymoticon$ chmod +x pymoticon.py
